@@ -1,4 +1,4 @@
-import sqlite3
+import requests
 from aiogram import Bot
 from decouple import config
 from aiogram.types import ChatMember
@@ -6,9 +6,6 @@ from fastapi import APIRouter, Request
 
 
 BASE_URL = config("BASE_URL")
-DATABASE = config("DATABASE")
-conn = sqlite3.connect(DATABASE)
-cursor = conn.cursor()
 
 router = APIRouter()
 
@@ -60,10 +57,7 @@ async def send_message(request: Request, chat_id: int | str, ads: str | int, con
     try:
         await bot.send_message(chat_id=chat_id, text=content)
 
-        cursor.execute("UPDATE users_advertisement SET receivers = receivers + 1 WHERE id = ?", (ads))
-        conn.commit()
-        print(conn)
-        print(DATABASE)
+        requests.get(BASE_URL + f"/increment-receivers/?ads={ads}")
 
     except Exception as e:
         print("Error:Message did not send.")
