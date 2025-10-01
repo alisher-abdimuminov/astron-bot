@@ -2,3 +2,4 @@ venv
 .venv
 .env
 test.py
+*__pychache__
