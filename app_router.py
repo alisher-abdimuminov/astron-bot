@@ -62,6 +62,8 @@ async def send_message(request: Request, chat_id: int | str, ads: str | int, con
 
         cursor.execute("UPDATE users_advertisement SET receivers = receivers + 1 WHERE id = ?", (ads))
         conn.commit()
+        print(conn)
+        print(DATABASE)
 
     except Exception as e:
         print("Error:Message did not send.")
