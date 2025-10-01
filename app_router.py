@@ -1,9 +1,14 @@
+import sqlite3
 from aiogram import Bot
+from decouple import config
 from aiogram.types import ChatMember
-from aiogram.types import Message, WebAppInfo, InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from fastapi import APIRouter, Request
 
+
+BASE_URL = config("BASE_URL")
+DATABASE = config("DATABASE")
+conn = sqlite3.connect(DATABASE)
+cursor = conn.cursor()
 
 router = APIRouter()
 
@@ -49,11 +54,15 @@ async def verify_channel(request: Request, channel: int | str) -> None:
     
 
 @router.get("/send-message/")
-async def send_message(request: Request, chat_id: int | str, content: str):
+async def send_message(request: Request, chat_id: int | str, ads: str | int, content: str):
     bot: Bot = request.app.state.bot
 
     try:
         await bot.send_message(chat_id=chat_id, text=content)
+
+        cursor.execute("UPDATE users_advertisement SET receivers = receivers + 1 WHERE id = ?", (ads))
+        conn.commit()
+
     except Exception as e:
         print("Error:Message did not send.")
         print(e)
