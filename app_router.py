@@ -57,7 +57,7 @@ async def send_message(request: Request, chat_id: int | str, ads: str | int, con
     try:
         await bot.send_message(chat_id=chat_id, text=content)
 
-        requests.get(BASE_URL + f"/increment-receivers/?ads={ads}")
+        requests.get(BASE_URL + f"/api/v1/increment-receivers/?ads={ads}")
 
     except Exception as e:
         print("Error:Message did not send.")
