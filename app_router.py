@@ -62,3 +62,6 @@ async def send_message(request: Request, chat_id: int | str, ads: str | int, con
     except Exception as e:
         print("Error:Message did not send.")
         print(e)
+    return {
+        "status": "ok"
+    }
