@@ -60,6 +60,7 @@ async def send_message(request: Request, chat_id: int | str, ads: str | int, con
         requests.get(BASE_URL + f"/api/v1/increment-receivers/?ads={ads}")
 
     except Exception as e:
+        requests.get(BASE_URL + f"/api/v1/increment-receivers/?ads={ads}&user_id={chat_id}")
         print("Error:Message did not send.")
         print(e)
     return {
