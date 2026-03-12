@@ -31,7 +31,7 @@ def telemtery(message: Message):
 async def command_start_handler(message: Message):
     telemtery(message)
 
-    photo = FSInputFile("images/landing.jpg")
+    photo = FSInputFile("images/starter.jpg")
 
     builder = InlineKeyboardBuilder()
     builder.add(
