@@ -2,7 +2,7 @@ import requests
 from decouple import config
 from aiogram import Router
 from aiogram.filters import CommandStart
-from aiogram.types import Message, WebAppInfo, InlineKeyboardButton
+from aiogram.types import Message, WebAppInfo, InlineKeyboardButton, FSInputFile
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
@@ -30,6 +30,9 @@ def telemtery(message: Message):
 @router.message(CommandStart())
 async def command_start_handler(message: Message):
     telemtery(message)
+
+    photo = FSInputFile("images/landing.jpg")
+
     builder = InlineKeyboardBuilder()
     builder.add(
         InlineKeyboardButton(
@@ -41,8 +44,9 @@ async def command_start_handler(message: Message):
         InlineKeyboardButton(text="Ilovani ochish", web_app=WebAppInfo(url=WEBAPP_URL))
     )
     builder.adjust(1, 1)
-    await message.answer(
-        """Assalomu aleykum!!!
+    await message.answer_photo(
+        photo=photo,
+        caption="""Assalomu aleykum!!!
 
 "ASTRON - onlayn repetitor" loyihasining ilovasiga xush kelibsiz!!!
 
