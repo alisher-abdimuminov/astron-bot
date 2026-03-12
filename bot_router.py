@@ -20,7 +20,7 @@ def telemtery(message: Message):
                 "id": message.from_user.id,
                 "first_name": message.from_user.first_name,
                 "last_name": message.from_user.last_name,
-                "username": message.from_user.username
+                "username": message.from_user.username,
             },
         )
     except:
@@ -42,6 +42,17 @@ async def command_start_handler(message: Message):
     )
     builder.adjust(1, 1)
     await message.answer(
-        'Assalomu aleykum.\n\n"ASTRON - onlayn repetitor" loyihasining ilovasiga xush kelibsiz!!!\n\n- Ilovadan foydalanish uchun pastgi chap burchakdagi "Ilovani ochish" tugmasiga bosing.\n\n- Murojaat yo\'llash uchun @astron_corp ga yozing.',
+        """Assalomu aleykum!!!
+
+"ASTRON - onlayn repetitor" loyihasining ilovasiga xush kelibsiz!!!
+
+⚜️Tarix fanidan bizda mavjud:
+- Yangi testlar
+- Bepul savol-javoblar
+- Mavzulashgan qo'llanmalar
+
+📲 Murojaat uchun: @astron_corp
+
+📌 Ilovadan foydalanish uchun pastgi chap burchakdagi "Ilovani ochish" tugmasiga bosing.""",
         reply_markup=builder.as_markup(),
     )
