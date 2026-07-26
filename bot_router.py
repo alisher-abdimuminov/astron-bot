@@ -1,4 +1,4 @@
-import requests
+import httpx
 from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message, WebAppInfo, InlineKeyboardButton, FSInputFile, MessageReactionUpdated
@@ -12,24 +12,27 @@ BASE_URL = config("BASE_URL")
 router = Router()
 
 
-def telemtery(message: Message):
+async def telemetry(message: Message):
+    if not message.from_user:
+        return
     try:
-        requests.post(
-            url=BASE_URL + "/api/v1/telemetry/",
-            data={
-                "id": message.from_user.id,
-                "first_name": message.from_user.first_name,
-                "last_name": message.from_user.last_name,
-                "username": message.from_user.username,
-            },
-        )
-    except:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            await client.post(
+                url=f"{BASE_URL}/api/v1/telemetry/",
+                json={
+                    "id": message.from_user.id,
+                    "first_name": message.from_user.first_name,
+                    "last_name": message.from_user.last_name,
+                    "username": message.from_user.username,
+                },
+            )
+    except Exception as e:
         pass
 
 
 @router.message(CommandStart())
 async def command_start_handler(message: Message):
-    telemtery(message)
+    await telemetry(message)
 
     photo = FSInputFile("images/starter.jpg")
 
