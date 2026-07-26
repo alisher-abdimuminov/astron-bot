@@ -70,6 +70,7 @@ async def handle_channel_post(message: Message):
 
 @router.message_reaction()
 async def handle_reactions(event: MessageReactionUpdated):
+	print(f"reaction event:", event)
 	if len(event.new_reaction) <= len(event.old_reaction):
 		return
 
