@@ -71,7 +71,6 @@ async def handle_channel_post(message: Message):
 
 @router.message(
     F.reply_to_message,
-    F.reply_to_message.is_automatic_forward == True
 )
 async def handle_channel_comment(message: Message):
     # Sharh yozgan foydalanuvchi ma'lumotlari
