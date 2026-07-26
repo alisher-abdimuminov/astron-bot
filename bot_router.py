@@ -1,5 +1,6 @@
 import httpx
 from aiogram import Router
+from aiogram import F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, WebAppInfo, InlineKeyboardButton, FSInputFile, MessageReactionUpdated
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -68,18 +69,21 @@ async def command_start_handler(message: Message):
 async def handle_channel_post(message: Message):
     print(f"Kanalda yangi post: {message.message_id} in {message.chat.id}")
 
-@router.message_reaction()
-async def handle_reactions(event: MessageReactionUpdated):
-	print(f"reaction event:", event)
-	if len(event.new_reaction) <= len(event.old_reaction):
-		return
+@router.message(
+    F.reply_to_message,
+    F.reply_to_message.is_automatic_forward == True
+)
+async def handle_channel_comment(message: Message):
+    # Sharh yozgan foydalanuvchi ma'lumotlari
+    user = message.from_user
+    if not user or user.is_bot:
+        return  # Botlar yoki anonim sharhlarni o'tkazib yuboramiz
 
-	user = event.user
-	if not user:
-		return
+    user_id = user.id
+    comment_text = message.text
+    chat_id = message.chat.id  # Muhokama guruhi ID-si
 
-	user_id = user.id
-	chat_id = event.chat.id
-	message_id = event.message_id
+    # Asl kanal postining ID-si
+    original_post_id = message.reply_to_message.forward_from_message_id
 
-	print(f"User {user_id} reacted to message {message_id} in chat {chat_id}")
+    print(f"User {user_id} post #{original_post_id} ga sharh yozdi: {comment_text}")
