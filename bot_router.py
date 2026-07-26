@@ -64,6 +64,10 @@ async def command_start_handler(message: Message):
         reply_markup=builder.as_markup(),
     )
 
+@router.channel_post()
+async def handle_channel_post(message: Message):
+    print(f"Kanalda yangi post: {message.message_id} in {message.chat.id}")
+
 @router.message_reaction()
 async def handle_reactions(event: MessageReactionUpdated):
 	if len(event.new_reaction) <= len(event.old_reaction):
