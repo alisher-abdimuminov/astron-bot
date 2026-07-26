@@ -1,17 +1,16 @@
 import asyncio
-import uvicorn
+from contextlib import asynccontextmanager
+
+from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.types import MenuButtonWebApp, WebAppInfo
 from decouple import config
 from fastapi import FastAPI
-from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
-from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from aiogram.types import MenuButtonWebApp, WebAppInfo
-from aiogram.client.default import DefaultBotProperties
 
 from app_router import router as app_router
 from bot_router import router as bot_router
-
 
 TOKEN = config("TOKEN")
 WEBAPP_URL = config("WEBAPP_URL")
@@ -38,7 +37,19 @@ dp.startup.register(bot_on_startup)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    asyncio.create_task(dp.start_polling(bot))
+    asyncio.create_task(
+        dp.start_polling(
+            bot,
+            allowed_updates=[
+                "message",
+                "edited_message",
+                "channel_post",
+                "message_reaction",
+                "callback_query",
+            ],
+        )
+    )
+
     app.state.bot = bot
     yield
 
@@ -52,6 +63,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# if __name__ == "__main__":
-#     uvicorn.run(app, port=8080)

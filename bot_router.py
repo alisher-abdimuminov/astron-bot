@@ -1,9 +1,9 @@
 import requests
-from decouple import config
 from aiogram import Router
 from aiogram.filters import CommandStart
-from aiogram.types import Message, WebAppInfo, InlineKeyboardButton, FSInputFile
+from aiogram.types import Message, WebAppInfo, InlineKeyboardButton, FSInputFile, MessageReactionUpdated
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from decouple import config
 
 
 WEBAPP_URL = config("WEBAPP_URL")
@@ -60,3 +60,18 @@ async def command_start_handler(message: Message):
 📌 Ilovadan foydalanish uchun pastgi chap burchakdagi "Ilovani ochish" tugmasiga bosing.""",
         reply_markup=builder.as_markup(),
     )
+
+@router.message_reaction()
+async def handle_reactions(event: MessageReactionUpdated):
+	if len(event.new_reaction) <= len(event.old_reaction):
+		return
+
+	user = event.user
+	if not user:
+		return
+
+	user_id = user.id
+	chat_id = event.chat.id
+	message_id = event.message_id
+
+	print(f"User {user_id} reacted to message {message_id} in chat {chat_id}")
