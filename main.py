@@ -45,6 +45,7 @@ async def lifespan(app: FastAPI):
                 "edited_message",
                 "channel_post",
                 "message_reaction",
+                "message_reaction_updated",
                 "callback_query",
             ],
         )
