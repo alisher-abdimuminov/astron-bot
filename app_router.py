@@ -90,7 +90,7 @@ async def send_post(payload: PostSchema, request: Request) -> dict:
         message = await bot.send_message(
             chat_id="@test_aaa_bbb",
             text=payload.content,
-            parse_mode=ParseMode.MARKDOWN_V2,
+            parse_mode=ParseMode.MARKDOWN,
             reply_markup=reply_markup,
         )
 
