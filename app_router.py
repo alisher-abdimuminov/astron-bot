@@ -79,7 +79,7 @@ async def send_post(payload: PostSchema, request: Request) -> dict:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="Bonus olish",
+                    text="🎁 Bonus",
                     url=button_url,
                 )
             ]
