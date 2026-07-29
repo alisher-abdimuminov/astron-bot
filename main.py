@@ -37,7 +37,8 @@ dp.startup.register(bot_on_startup)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    asyncio.create_task(
+    # 1. Polling'ni alohida task qilib ishga tushiramiz
+    polling_task = asyncio.create_task(
         dp.start_polling(
             bot,
             allowed_updates=[
@@ -48,11 +49,24 @@ async def lifespan(app: FastAPI):
                 "message_reaction_updated",
                 "callback_query",
             ],
+            handle_signals=False,  # <--- MUHIM: Uvicorn va aiogram signallari toqnashmasligi uchun!
         )
     )
 
     app.state.bot = bot
     yield
+
+    # --- SHUTDOWN (Ctrl+C bosilganda ishlaydigan qism) ---
+    # stop_polling() o'rniga birinchi task'ni bekor qilamiz va HTTP seansni yopamiz
+    polling_task.cancel()
+
+    try:
+        await polling_task
+    except (asyncio.CancelledError, Exception):
+        pass
+
+    # Bot HTTP klient seansini majburiy yopamiz
+    await bot.session.close()
 
 
 app = FastAPI(lifespan=lifespan)

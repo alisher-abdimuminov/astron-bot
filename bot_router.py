@@ -1,11 +1,15 @@
 import httpx
-from aiogram import Router
-from aiogram import F
+from aiogram import F, Router
 from aiogram.filters import CommandStart
-from aiogram.types import Message, WebAppInfo, InlineKeyboardButton, FSInputFile, MessageReactionUpdated
+from aiogram.types import (
+    FSInputFile,
+    InlineKeyboardButton,
+    Message,
+    MessageReactionUpdated,
+    WebAppInfo,
+)
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from decouple import config
-
 
 WEBAPP_URL = config("WEBAPP_URL")
 BASE_URL = config("BASE_URL")
@@ -65,24 +69,7 @@ async def command_start_handler(message: Message):
         reply_markup=builder.as_markup(),
     )
 
+
 @router.channel_post()
 async def handle_channel_post(message: Message):
     print(f"Kanalda yangi post: {message.message_id} in {message.chat.id}")
-
-@router.message(
-    F.reply_to_message,
-)
-async def handle_channel_comment(message: Message):
-    # Sharh yozgan foydalanuvchi ma'lumotlari
-    user = message.from_user
-    if not user or user.is_bot:
-        return  # Botlar yoki anonim sharhlarni o'tkazib yuboramiz
-
-    user_id = user.id
-    comment_text = message.text
-    chat_id = message.chat.id  # Muhokama guruhi ID-si
-
-    # Asl kanal postining ID-si
-    original_post_id = message.reply_to_message.forward_from_message_id
-
-    print(f"User {user_id} post #{original_post_id} ga sharh yozdi: {comment_text}")
