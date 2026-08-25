@@ -74,6 +74,7 @@ async def send_post(payload: PostSchema, request: Request) -> dict:
     bot: Bot = request.app.state.bot
 
     button_url = f"https://t.me/astrontest_bot?startapp={payload.post_id}"
+    donate_url = "https://taps.uz/tarix_repetitor_astron"
 
     reply_markup = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -81,7 +82,11 @@ async def send_post(payload: PostSchema, request: Request) -> dict:
                 InlineKeyboardButton(
                     text="🎁 Bonus",
                     url=button_url,
-                )
+                ),
+                InlineKeyboardButton(
+                    text="💸Donat yuborish",
+                    url=donate_url,
+                ),
             ]
         ]
     )
